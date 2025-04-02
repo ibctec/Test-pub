@@ -40,5 +40,7 @@ jobs:
 
       - name: Run Tests (pytest)
         run: |
+          pwd
+          ls -al
           pip install pytest
           pytest tests/
