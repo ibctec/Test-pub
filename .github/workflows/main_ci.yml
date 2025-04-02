@@ -41,4 +41,4 @@ jobs:
       - name: Run Tests (pytest)
         run: |
           cd employee-list/src/python
-          pytest tests/
+          poetry run pytest
