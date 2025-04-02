@@ -7,17 +7,17 @@ python -c "from emp.db import Base, engine; Base.metadata.create_all(bind=engine
 
 ## Run Application:
 cd to python dir
-poetry install
-poetry run uvicorn emp.main:app --reload
-Navigate to http://127.0.0.1:8000/docs and use the swagger docs
+<br /> poetry install
+<br /> poetry run uvicorn emp.main:app --reload
+<br /> Navigate to http://127.0.0.1:8000/docs and use the swagger docs
 
 # Run with Docker
 Navigate to python folder
-docker build -f ../Docker/Dockerfile --progress=plain --no-cache  -t emp-app .
-docker run --rm emp-app
-Navigate to http://127.0.0.1:8000/docs and use the swagger docs
+<br /> docker build -f ../Docker/Dockerfile --progress=plain --no-cache  -t emp-app .
+<br /> docker run --rm emp-app
+<br /> Navigate to http://127.0.0.1:8000/docs and use the swagger docs
 
 
 ## Run Tests:
 Navigate to python folder
-poetry run pytest
+<br /> poetry run pytest
