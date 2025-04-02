@@ -19,4 +19,5 @@ Navigate to http://127.0.0.1:8000/docs and use the swagger docs
 
 
 ## Run Tests:
-pytest tests/
+Navigate to python folder
+poetry run pytest
