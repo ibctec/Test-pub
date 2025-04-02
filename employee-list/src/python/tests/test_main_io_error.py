@@ -43,7 +43,6 @@ def test_io_error_on_create_employee(client: TestClient):
     with patch("emp.main.get_db") as mock_db:
         # mock_db.return_value = mock_db
         mock_db.side_effect = IOError("Database connection failed")
-        # with pytest.raises(IOError, match="Database connection failed"):
 
         response = client.post(
             "/employee/",
@@ -59,7 +58,7 @@ def test_io_error_on_create_employee(client: TestClient):
 
 
 def test_io_error_on_get_employee(client: TestClient):
-    """Test get_employee by patching get_db()"""
+    """Test get_employee by patching get_db() to throw exception"""
     with patch("emp.main.get_db") as mock_db:
         # mock_db.return_value = mock_db
         mock_db.side_effect = IOError("Database connection failed")
