@@ -40,6 +40,5 @@ jobs:
 
       - name: Run Tests (pytest)
         run: |
-          pip install pytest
           cd employee-list/src/python
           pytest tests/
