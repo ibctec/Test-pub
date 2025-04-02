@@ -1,6 +1,7 @@
 """
 Test main module API
 """
+
 import sys
 import os
 
@@ -11,9 +12,9 @@ from fastapi.testclient import TestClient
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+from emp.schemas import Base
 from emp.main import app, get_db
 from emp.schemas import Employee  # Import Employee model from actual schemas
-from emp.schemas import Base
 
 
 # Setup test database
@@ -24,7 +25,7 @@ TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engin
 
 # Override the get_db dependency
 def override_get_db():
-    """ Override get_db with in memory """
+    """Override get_db with in memory"""
     db = TestingSessionLocal()
     try:
         yield db
@@ -71,6 +72,7 @@ def test_create_duplicate_employee():
     assert response.status_code == 400
     assert response.json()["detail"] == "Email already registered"
 
+
 def test_invalid_email():
     """Test that email is invalid"""
     client.post("/employee/", json={"name": "John Doe", "email": "johndoe@example.com"})
@@ -79,8 +81,11 @@ def test_invalid_email():
     )
 
     assert response.status_code == 422
-    assert response.json()["detail"][0]["msg"] == \
-        "value is not a valid email address: An email address must have an @-sign."
+    assert (
+        response.json()["detail"][0]["msg"]
+        == "value is not a valid email address: An email address must have an @-sign."
+    )
+
 
 def test_get_employees():
     """Test getting all employees"""

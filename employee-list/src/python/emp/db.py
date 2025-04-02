@@ -1,7 +1,5 @@
 """
-API application using FastApi for API and 
-Sqlite4 for DB to create and list employees
-
+Database engine - SQlite4
 """
 
 from sqlalchemy import create_engine

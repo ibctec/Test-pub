@@ -7,7 +7,7 @@ Sqlite4 for DB to create and list employees
 import logging
 from typing import Any, Generator
 
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException
 from sqlalchemy.orm import Session
 
 from emp.models import EmployeeResponse, CreateEmployee
@@ -39,9 +39,7 @@ def get_db() -> Generator[Session, Any, Any]:
 
 # Create employee Endpoint
 @app.post("/employee/", response_model=dict)
-def create_emp(
-    employee: CreateEmployee, db: Session = Depends(get_db)
-) -> dict[str, str]:
+def create_emp(employee: CreateEmployee) -> dict[str, str]:
     """
     Create a new Employee
 
@@ -53,25 +51,29 @@ def create_emp(
         HTTPException HttpException
 
     """
-    if db.query(Employee).filter(Employee.email == employee.email).first():
-        logger.error("Email already registered")
-        raise HTTPException(status_code=400, detail="Email already registered")
-
     try:
+        db = next(get_db())
+        if db.query(Employee).filter(Employee.email == employee.email).first():
+            logger.error("Email already registered")
+            raise HTTPException(status_code=400, detail="Email already registered")
+
         new_emp = Employee(name=employee.name, email=employee.email)
         db.add(new_emp)
         db.commit()
         db.refresh(new_emp)
         logger.info("Employee created: %s", new_emp.email)
         return {"message": "Employee created successfully", "user_id": new_emp.id}
-    except IOError as e:
-        logger.error("Error creating Employee %s", e)
-        raise IOError(e) from e
+    except IOError as ioe:
+        logger.error("Error creating Employee %s", ioe)
+        raise HTTPException(
+            status_code=500,
+            detail="Error creating Employee due to Database connection error",
+        ) from ioe
 
 
 # Get All Employees Endpoint
 @app.get("/employees/", response_model=list[EmployeeResponse])
-def get_employees(db: Session = Depends(get_db)) -> list[Employee]:
+def get_employees() -> list[Employee]:
     """
     Get a list of all employees
 
@@ -83,9 +85,13 @@ def get_employees(db: Session = Depends(get_db)) -> list[Employee]:
 
     """
     try:
+        db = next(get_db())
         employees = db.query(Employee).all()
         logger.debug("Employees retrieved: %s", employees)
         return employees
-    except IOError as e:
-        logger.debug("Unexpected error occured %s", e)
-        raise IOError(e) from e
+    except IOError as ioe:
+        logger.debug("Unexpected error occured %s", ioe)
+        raise HTTPException(
+            status_code=500,
+            detail="Error getting Employees due to Database connection error",
+        ) from ioe
