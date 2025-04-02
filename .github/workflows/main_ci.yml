@@ -29,7 +29,9 @@ jobs:
         run: echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Install dependencies
-        run: poetry install --no-interaction --no-root
+        run: |
+            cd employee-list/src/python
+            poetry install --no-interaction --no-root
 
       - name: Run Linter (flake8)
         run: |
