@@ -71,6 +71,16 @@ def test_create_duplicate_employee():
     assert response.status_code == 400
     assert response.json()["detail"] == "Email already registered"
 
+def test_invalid_email():
+    """Test that email is invalid"""
+    client.post("/employee/", json={"name": "John Doe", "email": "johndoe@example.com"})
+    response = client.post(
+        "/employee/", json={"name": "Jane Doe", "email": "johndoeexample.com"}
+    )
+
+    assert response.status_code == 422
+    assert response.json()["detail"][0]["msg"] == \
+        "value is not a valid email address: An email address must have an @-sign."
 
 def test_get_employees():
     """Test getting all employees"""
