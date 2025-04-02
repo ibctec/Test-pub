@@ -1,6 +1,6 @@
 FROM python:3.12
 
-# Install Poetry (if you're using Poetry to manage dependencies)
+# Install Poetry
 RUN pip install poetry
 
 # Verify Poetry version
